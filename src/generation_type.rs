@@ -36,10 +36,10 @@ impl Iterator for GenTypeIterator {
 
 // Converts bitflags into iterator for convenient iteration.
 pub fn gentype_into_iterator(flags: u8) -> GenTypeIterator {
-    return GenTypeIterator {
+    GenTypeIterator {
         prev: NONE,
         full: flags,
-    };
+    }
 }
 
 // Translation table converting string labels into their associated generation type, or None if it does not parse.

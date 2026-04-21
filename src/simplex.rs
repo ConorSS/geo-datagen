@@ -1,3 +1,5 @@
+
+
 use std::ops::Add;
 
 use glam::{IVec2, IVec3, Vec2, Vec2Swizzles, Vec3};
@@ -39,8 +41,8 @@ fn grad2(hash: u8, point: &Vec2) -> f32 {
     // I believe this algorithm is trying to produce 8 directional gradients from the 8 discrete cardinals derived from the hash value.
     let h = hash & 7;
     let im = if h < 4 { point.xy() } else { point.yx() };
-    return (if h & 1 > 0 { -im.x } else { im.x })
-        + (if h & 2 > 0 { -2f32 * im.y } else { 2f32 * im.y });
+    (if h & 1 > 0 { -im.x } else { im.x })
+        + (if h & 2 > 0 { -2f32 * im.y } else { 2f32 * im.y })
 }
 
 // Directional gradient generator for simplex3.
@@ -56,9 +58,10 @@ fn grad3(hash: u8, point: &Vec3) -> f32 {
             point.z
         }, // According to example, this branch fixes some repeat values.
     };
-    return (if h & 1 != 0 { -im.x } else { im.x }) + (if h & 2 != 0 { -im.y } else { im.y });
+    (if h & 1 != 0 { -im.x } else { im.x }) + (if h & 2 != 0 { -im.y } else { im.y })
 }
 
+#[allow(clippy::excessive_precision)]
 pub fn simplex2(point: &Vec2) -> f32 {
     // the example is very c-like, expect very linear code
 
@@ -125,9 +128,10 @@ pub fn simplex2(point: &Vec2) -> f32 {
     };
 
     // Combine for rational result.
-    return (n0 + n1 + n2) * 30.0;
+    (n0 + n1 + n2) * 30.0
 }
 
+#[allow(clippy::excessive_precision)]
 pub fn simplex3(point: &Vec3) -> f32 {
     // The skew factors are simpler here.
     const F3: f32 = 0.333333333;
@@ -220,5 +224,5 @@ pub fn simplex3(point: &Vec3) -> f32 {
     };
 
     // Combine for rational result.
-    return (n0 + n1 + n2 + n3) * 30.0;
+    (n0 + n1 + n2 + n3) * 30.0
 }

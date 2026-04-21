@@ -42,9 +42,9 @@ impl DataGenerator for TemperatureDataGen {
         // re-scale to acceptable celsius range
         let temperature = 15.0 + ((noise + 1.0) * 0.5) * 10.0;
         Row {
-            timestamp: timestamp.clone(),
-            latlong: latlong.clone(),
-            temperature: temperature,
+            timestamp: *timestamp,
+            latlong: *latlong,
+            temperature
         }
     }
 }

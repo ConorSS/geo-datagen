@@ -36,7 +36,7 @@ pub trait DataGenerator {
         let mut o = vec![];
 
         for latlong in latlongs {
-            let timestamp = starttimestamp.clone();
+            let timestamp = *starttimestamp;
 
             for timeoffset in 0..rowcount {
                 // offset is calculated in hours from input timestamp
@@ -50,7 +50,7 @@ pub trait DataGenerator {
     }
 
     fn write_rows(fp: &str, rows: &Vec<Self::Row>) {
-        let Ok(mut file) = File::create(&fp) else {
+        let Ok(mut file) = File::create(fp) else {
             panic!("Could not create/truncate file: {fp}");
         };
         if writeln!(file, "{}", temperature::Row::header()).is_err() {

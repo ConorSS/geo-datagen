@@ -42,7 +42,7 @@ fn simplex_grid(w: i32, h: i32, scale: f32) {
             point *= scale;
             print!("{}", tonemap(simplex::simplex2(&point)));
         }
-        print!("\n");
+        println!();
     }
 }
 

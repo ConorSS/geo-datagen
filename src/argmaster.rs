@@ -98,7 +98,7 @@ impl AppArguments {
                 }
                 _ => {
                     // if this is the last argument...
-                    if iter.peek() == None {
+                    if iter.peek().is_none() {
                         // then this is outputfp
                         o.outputfp = v.to_owned();
                     } else {
