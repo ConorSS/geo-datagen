@@ -9,8 +9,8 @@ use crate::{
     argmaster::AppArguments,
     generation_type::{
         algos::{
-            DataGenerator, gen_latlongs,
-            temperature::TemperatureDataGen, windspeed::WindspeedDataGen,
+            DataGenerator, gen_latlongs, temperature::TemperatureDataGen,
+            windspeed::WindspeedDataGen,
         },
         gentype_into_iterator, gentype_to_string,
     },

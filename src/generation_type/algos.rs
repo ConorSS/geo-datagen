@@ -16,12 +16,11 @@ pub mod windspeed;
 type DT = DateTime<Utc>;
 
 // Enforce serializability of the Rows output by a Datagenerator (csv).
-pub trait DataGeneratorRow : Clone {
+pub trait DataGeneratorRow: Clone {
     fn header() -> &'static str;
 
     fn serialize(&self) -> String;
 }
-
 
 // Primitive pattern for all singular data generators.
 pub trait DataGenerator {
@@ -41,7 +40,7 @@ pub trait DataGenerator {
 
             for timeoffset in 0..rowcount {
                 // offset is calculated in hours from input timestamp
-                let thistime = timestamp + TimeDelta::new((timeoffset as i64)*3600, 0).unwrap();
+                let thistime = timestamp + TimeDelta::new((timeoffset as i64) * 3600, 0).unwrap();
                 let entry = Self::gen_single(&thistime, latlong);
                 o.push(entry);
             }
@@ -50,7 +49,7 @@ pub trait DataGenerator {
         o
     }
 
-    fn write_rows(fp : &str, rows: &Vec<Self::Row>) {
+    fn write_rows(fp: &str, rows: &Vec<Self::Row>) {
         let Ok(mut file) = File::create(&fp) else {
             panic!("Could not create/truncate file: {fp}");
         };

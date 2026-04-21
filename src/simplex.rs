@@ -40,11 +40,7 @@ fn grad2(hash: u8, point: &Vec2) -> f32 {
     let h = hash & 7;
     let im = if h < 4 { point.xy() } else { point.yx() };
     return (if h & 1 > 0 { -im.x } else { im.x })
-        + (if h & 2 > 0 {
-            -2f32 * im.y
-        } else {
-            2f32 * im.y
-        });
+        + (if h & 2 > 0 { -2f32 * im.y } else { 2f32 * im.y });
 }
 
 // Directional gradient generator for simplex3.
@@ -129,7 +125,7 @@ pub fn simplex2(point: &Vec2) -> f32 {
     };
 
     // Combine for rational result.
-    return (n0 + n1 + n2)*30.0;
+    return (n0 + n1 + n2) * 30.0;
 }
 
 pub fn simplex3(point: &Vec3) -> f32 {
@@ -224,5 +220,5 @@ pub fn simplex3(point: &Vec3) -> f32 {
     };
 
     // Combine for rational result.
-    return (n0 + n1 + n2 + n3)*30.0;
+    return (n0 + n1 + n2 + n3) * 30.0;
 }

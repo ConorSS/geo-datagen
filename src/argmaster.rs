@@ -10,14 +10,14 @@ fn get_sys_time_in_secs() -> u64 {
         Ok(n) => n.as_secs(),
         Err(_) => panic!("SystemTime before UNIX EPOCH!"),
     }
-} 
+}
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct AppArguments {
     pub types: u8,
     pub outputfp: String,
     pub entries: usize,
-    pub seed: isize
+    pub seed: isize,
 }
 
 impl Default for AppArguments {
@@ -26,19 +26,19 @@ impl Default for AppArguments {
             types: generation_type::ALL,
             outputfp: "datagen".to_owned(),
             entries: 100,
-            seed: get_sys_time_in_secs() as isize
+            seed: get_sys_time_in_secs() as isize,
         }
     }
 }
 
 impl AppArguments {
-    // Collect arguments to application from terminal arguments. 
+    // Collect arguments to application from terminal arguments.
     // Returns "None" when user has sent invalid arguments or wishes to open the help menu.
     pub fn collect() -> Option<AppArguments> {
         Self::from_arguments_array(args().collect())
     }
 
-    pub fn from_arguments_array(arguments : Vec<String>) -> Option<AppArguments> {
+    pub fn from_arguments_array(arguments: Vec<String>) -> Option<AppArguments> {
         let mut o = AppArguments::default();
 
         let mut iter = arguments.iter().peekable();
@@ -72,7 +72,10 @@ impl AppArguments {
                     // try and parse
                     for typetodo in todo.split(',') {
                         let Some(typetodo_u8) = parse_gentype(typetodo) else {
-                            println!("Unknown table type: '{}'. Check helptext for all table types.", typetodo);
+                            println!(
+                                "Unknown table type: '{}'. Check helptext for all table types.",
+                                typetodo
+                            );
                             return None;
                         };
                         o.types |= typetodo_u8;
@@ -85,7 +88,10 @@ impl AppArguments {
                         return None;
                     };
                     let Ok(entriescount) = entriescount_raw.parse::<usize>() else {
-                        println!("Could not parse entries count '{}' as integer!", entriescount_raw);
+                        println!(
+                            "Could not parse entries count '{}' as integer!",
+                            entriescount_raw
+                        );
                         return None;
                     };
                     o.entries = entriescount;
@@ -123,11 +129,7 @@ impl AppArguments {
             ),
             ("-h", "Show helptext", ""),
             ("--help", "", ""),
-            (
-                "-s <number>",
-                "Seed randomization.",
-                "Random",
-            ),
+            ("-s <number>", "Seed randomization.", "Random"),
             ("--seed <number>", "", "All"),
             (
                 "-t <types>",
@@ -154,22 +156,43 @@ mod test {
     #[test]
     // validates a config without options defaults to the right default
     fn arguments_default() {
-        assert_eq!(AppArguments::from_arguments_array(vec!["blah".to_owned()]), Some(AppArguments::default()));
+        assert_eq!(
+            AppArguments::from_arguments_array(vec!["blah".to_owned()]),
+            Some(AppArguments::default())
+        );
     }
 
     #[test]
     // validates you can manually trigger helptext
     fn arguments_helptext() {
-        assert_eq!(AppArguments::from_arguments_array(vec!["blah".to_owned(), "-h".to_owned()]), None);
-        assert_eq!(AppArguments::from_arguments_array(vec!["blah".to_owned(), "--help".to_owned()]), None);
+        assert_eq!(
+            AppArguments::from_arguments_array(vec!["blah".to_owned(), "-h".to_owned()]),
+            None
+        );
+        assert_eq!(
+            AppArguments::from_arguments_array(vec!["blah".to_owned(), "--help".to_owned()]),
+            None
+        );
     }
 
     #[test]
     // validates the entries argument works right
     fn arguments_entries() {
         for set in [
-            (vec!["blah".into(), "-e".into(), "369".into()], Some(AppArguments { entries: 369, ..Default::default() })),
-            (vec!["blah".into(), "--entries".into(), "29032".into()], Some(AppArguments { entries: 29032, ..Default::default() })),
+            (
+                vec!["blah".into(), "-e".into(), "369".into()],
+                Some(AppArguments {
+                    entries: 369,
+                    ..Default::default()
+                }),
+            ),
+            (
+                vec!["blah".into(), "--entries".into(), "29032".into()],
+                Some(AppArguments {
+                    entries: 29032,
+                    ..Default::default()
+                }),
+            ),
             (vec!["blah".into(), "--entries".into(), "0.06".into()], None),
             (vec!["blah".into(), "-e".into()], None),
         ] {
