@@ -4,7 +4,8 @@ use rand::{
     SeedableRng,
     distr::uniform::{UniformFloat, UniformSampler},
 };
-use rand_xoshiro::Xoroshiro128Plus;
+
+use crate::RNG;
 
 pub mod temperature;
 
@@ -46,9 +47,9 @@ pub trait DataGenerator {
     }
 }
 
-pub fn gen_latlongs(seed: isize, count: usize) -> Vec<Vec2> {
+pub fn gen_latlongs(seed: i128, count: usize) -> Vec<Vec2> {
     let mut o = vec![];
-    let mut rng = Xoroshiro128Plus::from_seed((seed as i128).to_le_bytes());
+    let mut rng = RNG::from_seed(seed.to_le_bytes());
     // Temporary range transform bounds- random location in peak district
     // src: https://www.openstreetmap.org
     const MAXIMA: Vec2 = Vec2::new(53.51755, -1.92553);

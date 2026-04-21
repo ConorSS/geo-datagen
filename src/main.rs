@@ -3,6 +3,7 @@ use std::{fs::File, io::Write, time::Instant};
 
 use chrono::Utc;
 use glam::Vec2;
+use rand_xoshiro::Xoroshiro128PlusPlus;
 
 use crate::{
     argmaster::AppArguments,
@@ -19,6 +20,8 @@ mod argmaster;
 mod generation_type;
 mod randomwalk;
 mod simplex;
+
+pub type RNG = Xoroshiro128PlusPlus;
 
 fn tonemap(value: f32) -> char {
     if value < -0.5 {
@@ -59,7 +62,7 @@ fn main() {
     // collect statics between generators
     let now = Utc::now();
     let latlongs = gen_latlongs(
-        args.seed,
+        args.seed as i128,
         // The amount of latlong points is determined by the total.
         (args.entries.isqrt()).max(1),
     );

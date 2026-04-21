@@ -126,7 +126,7 @@ impl AppArguments {
             (
                 "-s <number>",
                 "Seed randomization.",
-                "All",
+                "Random",
             ),
             ("--seed <number>", "", "All"),
             (
