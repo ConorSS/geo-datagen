@@ -7,7 +7,7 @@ use crate::RNG;
 
 // 2d high-fidelity random walk algorithm.
 // Collects next random walk point based on
-pub fn randwalk2(rng: &mut RNG, point: &Vec2, maxdist: f32) -> Vec2 {
+pub fn _randwalk2(rng: &mut RNG, point: &Vec2, maxdist: f32) -> Vec2 {
     if maxdist < 0.0 {
         panic!("Cannot randwalk with maxdist < 0!");
     }

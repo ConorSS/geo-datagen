@@ -1,5 +1,3 @@
-
-
 use std::ops::Add;
 
 use glam::{IVec2, IVec3, Vec2, Vec2Swizzles, Vec3};
