@@ -1,5 +1,5 @@
 use core::f32;
-use std::{fs::File, io::Write, time::Instant};
+use std::time::Instant;
 
 use chrono::Utc;
 use glam::Vec2;
@@ -9,8 +9,8 @@ use crate::{
     argmaster::AppArguments,
     generation_type::{
         algos::{
-            DataGenerator, DataGeneratorRow, gen_latlongs,
-            temperature::{self, TemperatureDataGen},
+            DataGenerator, gen_latlongs,
+            temperature::TemperatureDataGen, windspeed::WindspeedDataGen,
         },
         gentype_into_iterator, gentype_to_string,
     },
@@ -69,39 +69,31 @@ fn main() {
 
     let data_types = gentype_into_iterator(args.types);
     for data_type in data_types {
+        let fp = format!("{}_{}.csv", gentype_to_string(data_type), args.outputfp);
         match data_type {
             generation_type::TEMPERATURE => {
-                println!("Generating temperature...");
-
-                // collect values
+                println!("[1/2] Generating temperature values...");
                 let values = TemperatureDataGen::gen_many(&now, &latlongs, args.entries);
 
-                // serialize to file
-                let fp = format!("{}_{}.csv", gentype_to_string(data_type), args.outputfp);
-                let Ok(mut file) = File::create(&fp) else {
-                    panic!("Could not create/truncate file: {fp}");
-                };
-                if writeln!(file, "{}", temperature::Row::header()).is_err() {
-                    panic!("File write failure to {fp}")
-                }
-                for v in values {
-                    if writeln!(file, "{}", v.serialize()).is_err() {
-                        panic!("File write failure to {fp}")
-                    }
-                }
+                println!("[2/2] Serializing to file...");
+                TemperatureDataGen::write_rows(&fp, &values);
                 println!("Written to {fp}.");
             }
             generation_type::WINDSPEED => {
-                println!("Generating windspeed...");
-                todo!("yeah no way buddy");
+                println!("[1/2] Generating windspeed values...");
+                let values = WindspeedDataGen::gen_many(&now, &latlongs, args.entries);
+
+                println!("[2/2] Serializing to file...");
+                WindspeedDataGen::write_rows(&fp, &values);
+                println!("Written to {fp}.");
             }
             _ => panic!("Unexpected data_type!: {}", data_type),
         }
     }
 
     println!(
-        "Completed in {} s.",
-        Instant::now().duration_since(timer).as_secs()
+        "Completed in {:.3} s.",
+        Instant::now().duration_since(timer).as_secs_f32()
     );
 
     simplex_grid(50, 5, 0.1);

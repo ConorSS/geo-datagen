@@ -1,3 +1,6 @@
+use std::fs::File;
+use std::io::Write;
+
 use chrono::{DateTime, TimeDelta, Utc};
 use glam::Vec2;
 use rand::{
@@ -45,6 +48,20 @@ pub trait DataGenerator {
         }
 
         o
+    }
+
+    fn write_rows(fp : &str, rows: &Vec<Self::Row>) {
+        let Ok(mut file) = File::create(&fp) else {
+            panic!("Could not create/truncate file: {fp}");
+        };
+        if writeln!(file, "{}", temperature::Row::header()).is_err() {
+            panic!("File write failure to {fp}")
+        }
+        for v in rows {
+            if writeln!(file, "{}", v.serialize()).is_err() {
+                panic!("File write failure to {fp}")
+            }
+        }
     }
 }
 
