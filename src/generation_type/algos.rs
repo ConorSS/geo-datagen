@@ -8,6 +8,7 @@ use rand::{
 use crate::RNG;
 
 pub mod temperature;
+pub mod windspeed;
 
 type DT = DateTime<Utc>;
 

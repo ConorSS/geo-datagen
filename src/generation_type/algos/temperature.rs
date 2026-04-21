@@ -5,7 +5,7 @@ use super::DT;
 
 #[derive(Debug, Clone)]
 pub struct Row {
-    pub timestamp : DT, // This is used as the data is assumed for a single geographic area/timezone
+    pub timestamp : DT,
     pub latlong : Vec2,
     pub temperature : f32,
 }
