@@ -130,7 +130,7 @@ impl AppArguments {
             ("-h", "Show helptext", ""),
             ("--help", "", ""),
             ("-s <number>", "Seed randomization.", "Random"),
-            ("--seed <number>", "", "All"),
+            ("--seed <number>", "", "Random"),
             (
                 "-t <types>",
                 "Set types of output data (Comma-seperated)",
