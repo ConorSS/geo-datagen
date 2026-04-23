@@ -13,7 +13,6 @@ pub fn gen_basis_array(seed : u128, count: usize) -> Vec<u128> {
             rng.sample(StandardUniform)
         );
     }
-    dbg!(&o);
     o
 }
 
