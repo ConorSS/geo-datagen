@@ -2,7 +2,7 @@ use glam::{Vec2, Vec3};
 
 use super::DT;
 use crate::{
-    generation_type::algos::{DataGenerator, DataGeneratorRow},
+    generation_type::algos::{DataGenerator, DataGeneratorRow, common::latlong_from_basis},
     simplex::simplex3,
 };
 
@@ -34,7 +34,8 @@ pub struct TemperatureDataGen {}
 impl DataGenerator for TemperatureDataGen {
     type Row = Row;
 
-    fn gen_single(timestamp: &DT, latlong: &Vec2) -> Row {
+    fn gen_single(timestamp: &DT, basis: u128) -> Row {
+        let latlong = latlong_from_basis(basis);
         // we'll be using simplex3 to produce this output, just need to translate
         let timems = (timestamp.timestamp() as f32) / 200000.0;
         let point = Vec3::new(latlong.x, latlong.y, timems);
@@ -43,8 +44,8 @@ impl DataGenerator for TemperatureDataGen {
         let temperature = 15.0 + ((noise + 1.0) * 0.5) * 10.0;
         Row {
             timestamp: *timestamp,
-            latlong: *latlong,
-            temperature
+            latlong: latlong,
+            temperature,
         }
     }
 }

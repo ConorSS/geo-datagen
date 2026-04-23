@@ -9,8 +9,7 @@ use crate::{
     argmaster::AppArguments,
     generation_type::{
         algos::{
-            DataGenerator, gen_latlongs, temperature::TemperatureDataGen,
-            windspeed::WindspeedDataGen,
+            DataGenerator, common::gen_basis_array, gps::GpsDataGen, temperature::TemperatureDataGen, windspeed::WindspeedDataGen
         },
         gentype_into_iterator, gentype_to_string,
     },
@@ -61,8 +60,8 @@ fn main() {
     let timer = Instant::now();
     // collect statics between generators
     let now = Utc::now();
-    let latlongs = gen_latlongs(
-        args.seed as i128,
+    let basis = gen_basis_array(
+        args.seed as u128, 
         // The amount of latlong points is determined by the total.
         (args.entries.isqrt()).max(1),
     );
@@ -73,7 +72,7 @@ fn main() {
         match data_type {
             generation_type::TEMPERATURE => {
                 println!("[1/2] Generating temperature values...");
-                let values = TemperatureDataGen::gen_many(&now, &latlongs, args.entries);
+                let values = TemperatureDataGen::gen_many(&now, &basis, args.entries);
 
                 println!("[2/2] Serializing to file...");
                 TemperatureDataGen::write_rows(&fp, &values);
@@ -81,10 +80,18 @@ fn main() {
             }
             generation_type::WINDSPEED => {
                 println!("[1/2] Generating windspeed values...");
-                let values = WindspeedDataGen::gen_many(&now, &latlongs, args.entries);
+                let values = WindspeedDataGen::gen_many(&now, &basis, args.entries);
 
                 println!("[2/2] Serializing to file...");
                 WindspeedDataGen::write_rows(&fp, &values);
+                println!("Written to {fp}.");
+            }
+            generation_type::GPS => {
+                println!("[1/2] Generating GPS movement values...");
+                let values = GpsDataGen::gen_many(&now, &basis, args.entries);
+
+                println!("[2/2] Serializing to file...");
+                GpsDataGen::write_rows(&fp, &values);
                 println!("Written to {fp}.");
             }
             _ => panic!("Unexpected data_type!: {}", data_type),

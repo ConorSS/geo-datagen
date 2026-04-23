@@ -6,7 +6,7 @@ use rand::{
 
 use crate::{
     RNG,
-    generation_type::algos::{DT, DataGenerator, DataGeneratorRow},
+    generation_type::algos::{DT, DataGenerator, DataGeneratorRow, common::latlong_from_basis},
     simplex::simplex2,
 };
 
@@ -38,9 +38,10 @@ pub struct WindspeedDataGen {}
 impl DataGenerator for WindspeedDataGen {
     type Row = Row;
 
-    fn gen_single(timestamp: &DT, latlong: &Vec2) -> Self::Row {
+    fn gen_single(timestamp: &DT, basis: u128) -> Self::Row {
+        let latlong = latlong_from_basis(basis);
         // In this generator, simplex is used to dictate the "exposure" of a particular point.
-        let exposure = (simplex2(latlong) + 1.0) * 0.5;
+        let exposure = (simplex2(&latlong) + 1.0) * 0.5;
         // The most exposed points experience wind between 10-30mph, while less exposed points experience 0-20mph.
         let dist = UniformFloat::<f32>::new(exposure * 10.0, 10.0 + exposure * 20.0).unwrap();
 
@@ -50,7 +51,7 @@ impl DataGenerator for WindspeedDataGen {
 
         Row {
             timestamp: *timestamp,
-            latlong: *latlong,
+            latlong: latlong,
             windspeed: dist.sample(&mut rng),
         }
     }
