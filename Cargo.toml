@@ -1,5 +1,5 @@
 [package]
-name = "geo_datagen"
+name = "geo-datagen"
 version = "1.0.0"
 edition = "2024"
 
