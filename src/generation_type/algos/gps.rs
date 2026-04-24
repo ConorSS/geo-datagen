@@ -22,7 +22,7 @@ impl DataGeneratorRow for Row {
     fn serialize(&self) -> String {
         format!(
             "{},{},{},{}",
-            self.timestamp,
+            self.timestamp.to_rfc3339(),
             self.device_id.hyphenated().to_string(),
             self.latlong.x,
             self.latlong.y
